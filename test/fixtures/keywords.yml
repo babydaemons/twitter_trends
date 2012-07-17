@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+<%
+KEYWORDS = %w{ フジテレビ 花王 電通 自民党 民主党 AKB48 Perfume SMAP 嵐 }
+%>
+
+<% KEYWORDS.each_with_index do |v, i| %>
+keyword<%= i %>:
+  id: <%= i + 1%>
+  keyword: <%= v %>
+<% end %>

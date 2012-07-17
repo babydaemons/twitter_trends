@@ -1,0 +1,34 @@
+<h1>検索結果</h1>
+<% if @wanted == "" then -%>
+<h2><span style="color:blue">"<%= h @keyword -%>"</span>の中から検索。。。</h2>
+<% else -%>
+<h2><span style="color:blue">"<%= h @keyword -%>"</span>の中から、<span style="color:red">"<%= h @wanted -%>"</span>を検索。。。</h2>
+<% end -%>
+
+<% safe_concat page_navi(@page, @keyword_id, @since, @wanted) %>
+
+<table>
+ <% @matched.each do |tweet| -%>
+ <tr class="<%= cycle('even', 'odd') -%>">
+  <td>
+   <a href="<%= status_url(tweet) -%>" target="_blank">
+    <%= time_ago_in_words(tweet.created_at, :include_seconds => true) -%> ago
+   </a>
+  </td><!-- <%= tweet.created_at -%> -->
+  <td>
+   <a href="<%= profile_url(tweet) -%>" target="_blank">
+    <img src="<%= tweet.profile_image_url-%>" width="48" height="48" alt="<%= h tweet.from_user -%>" /></td>
+   </a>
+  <td>
+   <a href="<%= profile_url(tweet) -%>" target="_blank">
+    <%= tweet.from_user -%>
+   </a>
+  </td>
+  <td><% safe_concat rewrite_tweet(tweet) -%></td>
+ </tr>
+ <% end -%>
+</table> 
+
+<% safe_concat page_navi(@page, @keyword_id, @since, @wanted) %>
+
+<p>Find me in app/views/main/go.html.erb</p>

@@ -1,0 +1,70 @@
+<h1>条件入力</h1>
+
+<%= form_tag(url_for(:action => 'go'), :method => "get", :id => "query_form") do %>
+ <div class="input">
+  <label for="keyword_id">何から探す？</label>
+  <select id="keyword_id" name="keyword_id">
+   <% @crawled.each do |crawled| -%>
+   <option value="<%= crawled.keyword_id %>"><%= crawled.keyword %> (<%= num_fmt crawled.count %>件)</option>
+   <% end -%>
+  </select>
+  <label for="hours">いつから遡る？</label>
+  <select id="hours" name="hours">
+   <% @hours.each do |value, text| -%>
+   <option value="<%= value %>"><%= text %></option>
+   <% end -%>
+  </select>
+ </div>
+
+ <div class="input">
+  <label for="wanted">検索キーワード</label>
+  <input type="text" id="wanted" name="wanted" value="" />
+  <%= button_tag('Go!') %>
+ </div>
+<% end %>
+
+<h2>tweet件数サマリー</h2>
+<%= form_tag(url_for(:action => 'index'), :method => "get", :id => "summary_form") do %>
+ <div class="input">
+  <label for="from">いつから遡る？</label>
+  <select id="from" name="from">
+   <% @hours.each do |value, text| -%>
+   <option value="<%= value %>"<%= (params[:from].to_i == value) ? ' selected="selected"' : "" %>><%= text %></option>
+   <% end -%>
+  </select>
+  <label for="span">区切る期間は？</label>
+  <select id="span" name="span">
+   <% @spans.each do |value, text| -%>
+   <option value="<%= value %>"<%= (params[:span] == value) ? ' selected="selected"' : "" %>>１<%= text %></option>
+   <% end -%>
+  </select>
+  <%= button_tag('Go!') %>
+ </div>
+
+ <% unit = @spans[@span] -%>
+ <% summary = parse_record @summary -%>
+ <table>
+  <col style="width:5em" />
+  <% @crawled.each do |crawled| -%>
+  <col style="width:5em" />
+  <% end -%>
+
+  <tr class="hdr">
+   <th>時間</th>
+   <% @crawled.each do |crawled| -%>
+   <th><%= h crawled.keyword -%></th>
+    <% end -%>
+  </tr>
+
+  <% summary.each do |i, counts| -%>
+  <tr class="<%= cycle('even', 'odd') -%>">
+   <td class="summary"><%= i.to_s + unit -%>前</td>
+   <% @crawled.each do |crawled| -%>
+   <td class="summary"><%= num_fmt counts[crawled.keyword_id] -%></td>
+   <% end -%>
+  </tr>
+  <% end -%>
+ </table>
+<% end %>
+
+<p>Find me in app/views/main/index.html.erb</p>
